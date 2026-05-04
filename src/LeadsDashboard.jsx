@@ -590,7 +590,7 @@ export default function LeadsDashboard() {
 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 22, flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#f0f0f0", letterSpacing: -0.5, display: "flex", alignItems: "center", gap: "10px" }}><img src="/SilverGroupfaviconsondisplay.png" alt="Logo" style={{ height: "28px", width: "auto", display:"block"}}/> Leads Dashboard</h1>
+          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#f0f0f0", letterSpacing: -0.5, display: "flex", alignItems: "center", gap: "10px" }}><img src="/images/SilverGroupfaviconsondisplay.png" alt="Logo" style={{ height: "28px", width: "auto", display:"block"}}/> Leads Dashboard</h1>
           <div style={{ color: "#666666", fontSize: 12, marginTop: 3 }}>Silver Group</div>
           <div style={{ marginTop: 22 }}>
             <Flt label="All Projects" value={fProject} onChange={setFProject} options={projectNames} />
