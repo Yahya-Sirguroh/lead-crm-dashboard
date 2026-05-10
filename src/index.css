@@ -9,6 +9,8 @@ body {
   color: #eeeeff;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
 }
 
 /* Custom scrollbar */
@@ -19,7 +21,7 @@ body {
 
 /* Remove default button/input/select styles */
 button, input, select, textarea {
-  font-family: inherit;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
 }
 
 select option {

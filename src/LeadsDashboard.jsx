@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import * as XLSX from "xlsx";
+import UserManagementModal from "./UserManagementModal";
 
 const API_BASE = "/api";
 const PAGE_SIZE = 12;
@@ -68,7 +69,7 @@ function DetailDrawer({ lead, onClose, onEdit }) {
   return (
     <>
       <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 400, animation: "fadeIn .2s ease" }} />
-      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px,100vw)", background: "#111111", borderLeft: "1px solid #2a2a2a", zIndex: 500, display: "flex", flexDirection: "column", animation: "slideIn .25s cubic-bezier(.4,0,.2,1)", boxShadow: "-8px 0 40px #00000088" }}>
+      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px,100vw)", background: "#111111", borderLeft: "1px solid #2a2a2a", zIndex: 500, display: "flex", flexDirection: "column", animation: "slideIn .25s cubic-bezier(.4,0,.2,1)", boxShadow: "-8px 0 40px #00000088", overscrollBehavior: "contain" }}>
 
         <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid #2a2a2a", background: "#161616", flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
@@ -215,7 +216,7 @@ function LeadCard({ lead, onView, onUpdate }) {
     <div onClick={() => onView(lead)} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ background: hovered ? "#1a1a1a" : "#141414", border: `1px solid ${hovered ? "#555555" : "#2a2a2a"}`, borderRadius: 14, padding: "14px 14px 12px", display: "flex", flexDirection: "column", transition: "all .2s", boxShadow: hovered ? "0 6px 32px #00000044" : "none", cursor: "pointer", position: "relative" }}>
 
-      {hovered && <div style={{ position: "absolute", top: 10, right: 12, color: "#aaaaaa", fontSize: 10.5, fontWeight: 600, background: "#222222", borderRadius: 6, padding: "2px 8px", border: "1px solid #444444" }}>View Details →</div>}
+      <div style={{ position: "absolute", top: 10, right: 12, color: "#aaaaaa", fontSize: 10.5, fontWeight: 600, background: "#222222", borderRadius: 6, padding: "2px 8px", border: "1px solid #444444", opacity: hovered ? 1 : 0, transition: "opacity .2s", pointerEvents: "none" }}>View Details →</div>
 
       <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
         <div style={{ width: 36, height: 36, borderRadius: "50%", background: hovered ? "linear-gradient(135deg,#2a2a2a,#3a3a3a)" : "linear-gradient(135deg,#1e1e1e,#2a2a2a)", display: "flex", alignItems: "center", justifyContent: "center", color: hovered ? "#aaaaaa" : "#666666", flexShrink: 0, transition: "all .2s" }}>
@@ -323,7 +324,7 @@ function UpdateModal({ lead, onClose, onSave, projects, users }) {
         </div>
 
         <Sec title="Core Details" />
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))", gap: "0 16px" }}>
           <div><Lbl>PROJECT</Lbl><select value={form.project} onChange={set("project")} style={inp}><option value="">— No Project —</option>{projects.map(p => <option key={p._id} value={p.projectName}>{p.projectName}</option>)}</select><div style={{ marginBottom: 10 }} /></div>
           <div><Lbl>STATUS</Lbl><select value={form.status} onChange={set("status")} style={inp}>{STATUS_LIST.map(s => <option key={s} value={s}>{s}</option>)}</select><div style={{ marginBottom: 10 }} /></div>
           <div><Lbl>ASSIGNED TO</Lbl><select value={form.assignedTo} onChange={set("assignedTo")} style={inp}><option value="">— Select Agent —</option>{users.map(u => <option key={u._id} value={u.name}>{u.name}</option>)}</select><div style={{ marginBottom: 10 }} /></div>
@@ -331,7 +332,7 @@ function UpdateModal({ lead, onClose, onSave, projects, users }) {
         </div>
 
         <Sec title="Lead Details" />
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))", gap: "0 16px" }}>
           <div><Lbl>FAMILY</Lbl><input value={form.family} onChange={set("family")} placeholder="e.g. Joint / Nuclear" style={inp} /><div style={{ marginBottom: 10 }} /></div>
           <div><Lbl>REASON</Lbl><input value={form.reason} onChange={set("reason")} placeholder="Reason for purchase" style={inp} /><div style={{ marginBottom: 10 }} /></div>
           <div><Lbl>FUNDING</Lbl><input value={form.funding} onChange={set("funding")} placeholder="e.g. Self / Loan" style={inp} /><div style={{ marginBottom: 10 }} /></div>
@@ -344,7 +345,7 @@ function UpdateModal({ lead, onClose, onSave, projects, users }) {
         </div>
 
         <Sec title="Follow Up" />
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))", gap: "0 16px" }}>
           <div><Lbl>REVISIT DATE</Lbl><input type="date" value={form.revisitDate} onChange={set("revisitDate")} style={{ ...inp, colorScheme: "dark" }} /><div style={{ marginBottom: 10 }} /></div>
           <div><Lbl>NEXT FOLLOW UP</Lbl><input type="date" value={form.nextFollowUp} onChange={set("nextFollowUp")} style={{ ...inp, colorScheme: "dark" }} /><div style={{ marginBottom: 10 }} /></div>
         </div>
@@ -370,11 +371,11 @@ function UpdateModal({ lead, onClose, onSave, projects, users }) {
 
 function StatCard({ label, count, accent, emoji }) {
   return (
-    <div style={{ background: "#141414", border: "1px solid #2a2a2a", borderRadius: 13, padding: "13px 16px", display: "flex", alignItems: "center", gap: 12, flex: "1 1 130px", minWidth: 120 }}>
-      <div style={{ width: 36, height: 36, borderRadius: 9, background: "#222222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>{emoji}</div>
+    <div style={{ background: "#141414", border: "1px solid #2a2a2a", borderRadius: 13, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ width: 34, height: 34, borderRadius: 9, background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>{emoji}</div>
       <div>
-        <div style={{ color: "#777777", fontSize: 11, marginBottom: 2 }}>{label}</div>
-        <div style={{ color: accent, fontSize: 22, fontWeight: 800, lineHeight: 1 }}>{count}</div>
+        <div style={{ color: "#777", fontSize: 11, marginBottom: 2 }}>{label}</div>
+        <div style={{ color: accent, fontSize: 20, fontWeight: 800, lineHeight: 1 }}>{count}</div>
       </div>
     </div>
   );
@@ -433,7 +434,7 @@ function exportToExcel(leads) {
 function Flt({ label, value, onChange, options }) {
   return (
     <select value={value} onChange={e => onChange(e.target.value)}
-      style={{ background: "#141414", border: "1px solid #333333", color: value ? "#e0e0e0" : "#777777", borderRadius: 9, padding: "8px 12px", fontSize: 13, cursor: "pointer", outline: "none" }}>
+      style={{ background: "#141414", border: "1px solid #333", color: value ? "#e0e0e0" : "#777", borderRadius: 9, padding: "8px 12px", fontSize: 13, cursor: "pointer", outline: "none", fontFamily: "inherit", flexShrink: 0 }}>
       <option value="">{label}</option>
       {options.map(o => <option key={o} value={o}>{o}</option>)}
     </select>
@@ -478,7 +479,6 @@ function AddProjectModal({ onClose, onAdded }) {
           </div>
           <div>
             <div style={{ color: "#f0f0f0", fontWeight: 800, fontSize: 16 }}>Add New Project</div>
-            <div style={{ color: "#777777", fontSize: 12, marginTop: 2 }}>This will be saved to tblproject in MongoDB</div>
           </div>
         </div>
 
@@ -504,7 +504,7 @@ function AddProjectModal({ onClose, onAdded }) {
   );
 }
 
-export default function LeadsDashboard() {
+export default function LeadsDashboard({ currentUser, onLogout }) {
   const [leads, setLeads] = useState([]);
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
@@ -520,6 +520,7 @@ export default function LeadsDashboard() {
   const [editLead, setEditLead] = useState(null);
   const [exporting, setExporting] = useState(false);
   const [showAddProject, setShowAddProject] = useState(false);
+  const [showUserMgmt, setShowUserMgmt] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE}/projects`).then(r => r.json()).then(d => setProjects(Array.isArray(d) ? d : [])).catch(() => {});
@@ -586,58 +587,103 @@ export default function LeadsDashboard() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#e0e0e0", fontFamily: "'DM Sans','Segoe UI',sans-serif", padding: "24px clamp(12px,3vw,32px)" }}>
+    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#e0e0e0", fontFamily: "'DM Sans','Segoe UI',sans-serif", padding: "16px clamp(12px,3vw,28px)" }}>
+      <style>{`
+        @media (min-width: 640px) {
+          .dash-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; }
+          .stat-grid { grid-template-columns: repeat(4, 1fr) !important; }
+          .action-row { flex-wrap: nowrap !important; }
+          .filter-row { flex-direction: row !important; }
+        }
+        @media (max-width: 420px) {
+          .action-btn-text { display: none !important; }
+        }
+        * { -webkit-tap-highlight-color: transparent; }
+        input, select, textarea, button { font-family: 'DM Sans','Segoe UI',sans-serif !important; }
+      `}</style>
 
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 22, flexWrap: "wrap", gap: 12 }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#f0f0f0", letterSpacing: -0.5, display: "flex", alignItems: "center", gap: "10px" }}><img src="/images/SilverGroupfaviconsondisplay.png" alt="Logo" style={{ height: "28px", width: "auto", display:"block"}}/> Leads Dashboard</h1>
-          <div style={{ color: "#666666", fontSize: 12, marginTop: 3 }}>Silver Group</div>
-          <div style={{ marginTop: 22 }}>
-            <Flt label="All Projects" value={fProject} onChange={setFProject} options={projectNames} />
+      {/* ── TOP NAV BAR ─────────────────────────────────────────── */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, gap: 10 }}>
+        {/* Logo + Title */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+          <img src="/images/SilverGroupfaviconsondisplay.png" alt="Logo" style={{ height: 32, width: 32, borderRadius: 8, objectFit: "contain", flexShrink: 0 }} />
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "#f0f0f0", letterSpacing: -0.3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Leads Dashboard</div>
+            <div style={{ color: "#555", fontSize: 11 }}>Silver Group</div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-          <button onClick={handleExport} disabled={exporting || leads.length === 0}
-            style={{ background: "#0f2a14", border: "1px solid #1a6a2a", color: "#4ade80", borderRadius: 9, padding: "8px 14px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, opacity: exporting || leads.length === 0 ? .5 : 1 }}>
-            <I.Excel />
-            {exporting ? "Exporting…" : `Export ${anyFilter ? "Filtered" : "All"} (${anyFilter ? filtered.length : leads.length})`}
-          </button>
-          <button onClick={() => setShowAddProject(true)}
-            style={{ background: "#222222", border: "1px solid #444444", color: "#cccccc", borderRadius: 9, padding: "8px 14px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600 }}>
-            <I.Plus /> Add Project
-          </button>
-          <button onClick={fetchLeads} style={{ background: "#1a1a1a", border: "1px solid #333333", color: "#aaaaaa", borderRadius: 9, padding: "8px 14px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
-            <I.Reload /> Refresh
+        {/* Right: user chip + sign out */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#141414", border: "1px solid #2a2a2a", borderRadius: 9, padding: "5px 10px" }}>
+            <button onClick={fetchLeads}
+          style={{ background: "#1a1a1a", border: "1px solid #333", color: "#aaa", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, flexShrink: 0 }}>
+          <I.Reload />
+         </button>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#2a2a2a", display: "flex", alignItems: "center", justifyContent: "center", color: "#666", flexShrink: 0 }}>
+              <I.User />
+            </div>
+            <div style={{ lineHeight: 1.2 }}>
+              <div style={{ color: "#cccccc", fontSize: 12, fontWeight: 700 }}>{currentUser?.name || currentUser?.username || "User"}</div>
+              <div style={{ color: "#444", fontSize: 10 }}>{currentUser?.role === "admin" ? "Admin" : "User"}</div>
+            </div>
+          </div>
+          <button onClick={onLogout} title="Sign out"
+            style={{ background: "#1a0a0a", border: "1px solid #3a1a1a", color: "#ef4444", borderRadius: 9, padding: "7px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 700 }}>
+            <LogoutIcon /><span style={{ display: "none" }} className="show-sm">Sign Out</span>
           </button>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+      {/* ── ACTION BUTTONS ROW ──────────────────────────────────── */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+        <Flt label="All Projects" value={fProject} onChange={setFProject} options={projectNames} />
+        <button onClick={handleExport} disabled={exporting || leads.length === 0}
+          style={{ background: "#0f2a14", border: "1px solid #1a6a2a", color: "#4ade80", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, opacity: exporting || leads.length === 0 ? .5 : 1, flexShrink: 0 }}>
+          <I.Excel />
+          <span>{exporting ? "Exporting…" : `Export ${anyFilter ? "Filtered" : "All"} (${anyFilter ? filtered.length : leads.length})`}</span>
+        </button>
+        <button onClick={() => setShowAddProject(true)}
+          style={{ background: "#222", border: "1px solid #444", color: "#ccc", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+          <I.Plus /> Add Project
+        </button>
+        {currentUser?.role === "admin" && (
+          <button onClick={() => setShowUserMgmt(true)}
+            style={{ background: "#1a1a2a", border: "1px solid #3730a3", color: "#818cf8", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+            <I.User /> Add Users
+          </button>
+        )}
+      </div>
+
+      {/* ── STAT CARDS ──────────────────────────────────────────── */}
+      <div className="stat-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: 16 }}>
         <StatCard label="Total Leads" count={total} accent="#aaaaaa" emoji="📋" />
         <StatCard label="New Leads" count={newCount} accent="#fb923c" emoji="🆕" />
         <StatCard label="Converted" count={converted} accent="#4ade80" emoji="✅" />
         <StatCard label="Site Visits" count={siteVisit} accent="#38bdf8" emoji="🏗️" />
       </div>
 
-      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#141414", border: "1px solid #333333", borderRadius: 9, padding: "8px 14px", flex: "1 1 200px" }}>
-          <span style={{ color: "#555555", flexShrink: 0 }}><I.Search /></span>
+      {/* ── SEARCH + FILTERS ────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#141414", border: "1px solid #333", borderRadius: 9, padding: "10px 14px" }}>
+          <span style={{ color: "#555", flexShrink: 0 }}><I.Search /></span>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name, phone, city…"
-            style={{ background: "none", border: "none", outline: "none", color: "#e0e0e0", fontSize: 13, width: "100%" }} />
+            style={{ background: "none", border: "none", outline: "none", color: "#e0e0e0", fontSize: 13, width: "100%", fontFamily: "inherit" }} />
         </div>
-        <Flt label="All Status" value={fStatus} onChange={setFStatus} options={STATUS_LIST} />
-        <Flt label="All Cities" value={fCity} onChange={setFCity} options={cities} />
-        <Flt label="Property Type" value={fProp} onChange={setFProp} options={props} />
-        {anyFilter && (
-          <button onClick={() => { setSearch(""); setFStatus(""); setFCity(""); setFProp(""); setFProject(""); }}
-            style={{ background: "none", border: "1px solid #ef444455", color: "#ef4444", borderRadius: 8, padding: "8px 12px", cursor: "pointer", fontSize: 12 }}>
-            ✕ Clear
-          </button>
-        )}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Flt label="All Status" value={fStatus} onChange={setFStatus} options={STATUS_LIST} />
+          <Flt label="All Cities" value={fCity} onChange={setFCity} options={cities} />
+          <Flt label="Property Type" value={fProp} onChange={setFProp} options={props} />
+          {anyFilter && (
+            <button onClick={() => { setSearch(""); setFStatus(""); setFCity(""); setFProp(""); setFProject(""); }}
+              style={{ background: "none", border: "1px solid #ef444455", color: "#ef4444", borderRadius: 8, padding: "8px 12px", cursor: "pointer", fontSize: 12, fontFamily: "inherit" }}>
+              ✕ Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {!loading && !error && filtered.length > 0 && (
-        <div style={{ color: "#444444", fontSize: 11.5, marginBottom: 10 }}>💡 Click any card to view all customer details</div>
+        <div style={{ color: "#444", fontSize: 11.5, marginBottom: 10 }}>💡 Tap any card to view all customer details</div>
       )}
 
       {loading && <div style={{ textAlign: "center", padding: "80px 0", color: "#666666" }}><div style={{ fontSize: 36, marginBottom: 12 }}>⏳</div>Fetching leads…</div>}
@@ -664,7 +710,7 @@ export default function LeadsDashboard() {
                 {fProject ? `No leads found for "${fProject}". Run the mapping script if you just added this project.` : "No leads match your filters."}
               </div>
             : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: 12 }}>
+              <div className="dash-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 180px), 1fr))", gap: 10 }}>
                 {pageLeads.map(lead => (
                   <LeadCard key={lead._id} lead={lead} onView={setViewLead} onUpdate={setEditLead} />
                 ))}
@@ -680,6 +726,15 @@ export default function LeadsDashboard() {
       {viewLead && <DetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onEdit={(l) => { setViewLead(null); setEditLead(l); }} />}
       {showAddProject && <AddProjectModal onClose={() => setShowAddProject(false)} onAdded={handleProjectAdded} />}
       {editLead && <UpdateModal lead={editLead} projects={projects} users={users} onClose={() => setEditLead(null)} onSave={handleSave} />}
+      {showUserMgmt && currentUser && <UserManagementModal currentUser={currentUser} onClose={() => setShowUserMgmt(false)} />}
     </div>
   );
 }
+
+const LogoutIcon = () => (
+  <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+    <polyline points="16 17 21 12 16 7" />
+    <line x1="21" y1="12" x2="9" y2="12" />
+  </svg>
+);
