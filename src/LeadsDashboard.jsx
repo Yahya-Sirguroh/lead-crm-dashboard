@@ -479,6 +479,7 @@ function AddProjectModal({ onClose, onAdded }) {
           </div>
           <div>
             <div style={{ color: "#f0f0f0", fontWeight: 800, fontSize: 16 }}>Add New Project</div>
+            <div style={{ color: "#777777", fontSize: 12, marginTop: 2 }}>This will be saved to tblproject in MongoDB</div>
           </div>
         </div>
 
@@ -535,7 +536,8 @@ export default function LeadsDashboard({ currentUser, onLogout }) {
       const res = await fetch(`${API_BASE}/leads`);
       if (!res.ok) throw new Error(`Server responded with ${res.status}`);
       const data = await res.json();
-      setLeads(Array.isArray(data) ? data : data.leads || []);
+      const all = Array.isArray(data) ? data : data.leads || [];
+      setLeads(all.filter(l => l.otpVerification === true));
     } catch (e) { setError(e.message); }
     finally { setLoading(false); }
   }, []);
@@ -615,10 +617,10 @@ export default function LeadsDashboard({ currentUser, onLogout }) {
         {/* Right: user chip + sign out */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#141414", border: "1px solid #2a2a2a", borderRadius: 9, padding: "5px 10px" }}>
-            <button onClick={fetchLeads}
+			<button onClick={fetchLeads}
           style={{ background: "#1a1a1a", border: "1px solid #333", color: "#aaa", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, flexShrink: 0 }}>
           <I.Reload />
-         </button>
+        </button>							  
             <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#2a2a2a", display: "flex", alignItems: "center", justifyContent: "center", color: "#666", flexShrink: 0 }}>
               <I.User />
             </div>
@@ -646,10 +648,14 @@ export default function LeadsDashboard({ currentUser, onLogout }) {
           style={{ background: "#222", border: "1px solid #444", color: "#ccc", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
           <I.Plus /> Add Project
         </button>
+        
+		
+		
+		
         {currentUser?.role === "admin" && (
           <button onClick={() => setShowUserMgmt(true)}
             style={{ background: "#1a1a2a", border: "1px solid #3730a3", color: "#818cf8", borderRadius: 9, padding: "8px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-            <I.User /> Add Users
+            <I.User />  Add Users
           </button>
         )}
       </div>
